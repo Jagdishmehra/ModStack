@@ -11,16 +11,16 @@ import Navbar from './components/Navbar'
 function App() {
   return (
     <Auth0Provider
-      domain={import.meta.env.VITE_AUTH0_DOMAIN || "dev-pouq2mfoxifc4e1g.us.auth0.com"}
-      clientId={import.meta.env.VITE_AUTH0_CLIENT_ID || "smp2hmkhHihH1mkzgQjqzpwlsXdEQ3fM"}
+      domain={import.meta.env.VITE_AUTH0_DOMAIN}
+      clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
       authorizationParams={{
-        redirect_uri:  "http://localhost:5173/"
+        redirect_uri: import.meta.env.VITE_AUTH0_REDIRECT_URI
       }}
       cacheLocation="localstorage"
     >
       <NotesProvider>
         <BrowserRouter>
-          <div className="min-h-screen bg-gray-50 flex flex-col">
+          <div className="min-h-screen bg-gradient-to-b from-gray-50 to-blue-50 flex flex-col">
             <Navbar />
             <div className="flex-grow container mx-auto px-4 py-6">
               <Routes>
@@ -33,6 +33,11 @@ function App() {
                 } />
               </Routes>
             </div>
+            <footer className="bg-white py-4 border-t border-gray-200">
+              <div className="container mx-auto px-4 text-center text-gray-500 text-sm">
+                © {new Date().getFullYear()} NotesApp. All rights reserved.
+              </div>
+            </footer>
           </div>
         </BrowserRouter>
       </NotesProvider>

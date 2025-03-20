@@ -10,7 +10,6 @@ export const NotesProvider = ({ children }) => {
   const { user, isAuthenticated } = useAuth0();
 
   useEffect(() => {
-    // Load notes from localStorage when component mounts and user is authenticated
     if (user) {
       try {
         setIsLoading(true);
@@ -19,7 +18,7 @@ export const NotesProvider = ({ children }) => {
           setNotes(JSON.parse(savedNotes));
         }
       } catch (error) {
-        console.error('Error loading notes:', error);
+        // Keep error handling without console.log
       } finally {
         setIsLoading(false);
       }
@@ -27,7 +26,6 @@ export const NotesProvider = ({ children }) => {
   }, [user]);
 
   useEffect(() => {
-    // Save notes to localStorage whenever notes change and user is authenticated
     if (user) {
       localStorage.setItem(`notes-${user.sub}`, JSON.stringify(notes));
     }
@@ -36,12 +34,14 @@ export const NotesProvider = ({ children }) => {
   const addNote = useCallback((note) => {
     const newNote = {
       id: Date.now().toString(),
-      title: note.title,
-      content: note.content,
+      title: note.title || "Untitled",
+      content: note.content || "",
+      color: note.color || { bg: 'bg-white', text: 'text-gray-900', name: 'Default' },
       createdAt: new Date().toISOString(),
       userId: user?.sub
     };
     setNotes(prevNotes => [newNote, ...prevNotes]);
+    return newNote;
   }, [user]);
 
   const deleteNote = useCallback((id) => {

@@ -1,55 +1,63 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNotes } from '../context/NotesContext';
-import NoteForm from '../components/NoteForm';
 import NotesList from '../components/NotesList';
 import SearchBar from '../components/SearchBar';
+import { FiFileText, FiLoader, FiPlusCircle } from 'react-icons/fi';
 
 const NotesApp = () => {
-  const [editing, setEditing] = useState(null);
-  const { notes, deleteNote, updateNote, isLoading } = useNotes();
+  const { notes, addNote, isLoading } = useNotes();
+  const [isAdding, setIsAdding] = useState(false);
 
-  const handleEdit = (note) => {
-    setEditing(note);
-    
-    // Scroll to form when editing
-    setTimeout(() => {
-      document.querySelector('.note-form').scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'center'
-      });
-    }, 100);
-  };
-
-  const handleCancel = () => {
-    setEditing(null);
+  const handleAddNewNote = () => {
+    const newNote = {
+      title: "New Note",
+      content: "Start typing here...",
+      color: { bg: 'bg-white', text: 'text-gray-900', name: 'Default' }
+    };
+    addNote(newNote);
+    setIsAdding(true);
   };
 
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
-        <p className="ml-3 text-lg text-gray-700">Loading notes...</p>
+        <div className="flex flex-col items-center text-blue-600">
+          <FiLoader className="h-10 w-10 animate-spin" />
+          <p className="mt-4 text-lg text-gray-700">Loading your notes...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">My Notes</h1>
-      <div className="mb-6">
-        <SearchBar />
+    <div className="max-w-7xl mx-auto">
+      <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between">
+        <div className="mb-4 sm:mb-0">
+          <h1 className="text-3xl font-bold text-gray-800 flex items-center">
+            <FiFileText className="mr-2" />
+            My Notes
+          </h1>
+          <p className="text-gray-500">
+            {notes.length} note{notes.length !== 1 ? 's' : ''}
+          </p>
+        </div>
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+          <div className="w-full sm:w-64">
+            <SearchBar />
+          </div>
+          <button 
+            onClick={handleAddNewNote}
+            className="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200 shadow-sm"
+          >
+            <FiPlusCircle className="mr-2" />
+            Add New Note
+          </button>
+        </div>
       </div>
-      <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-        <NoteForm editing={editing} onCancel={handleCancel} />
+
+      <div className="mt-6">
+        <NotesList isAdding={isAdding} setIsAdding={setIsAdding} />
       </div>
-      <div className="text-sm text-gray-500 mb-4">
-        {notes.length} note{notes.length !== 1 ? 's' : ''}
-      </div>
-      <NotesList 
-        notes={notes} 
-        onDelete={deleteNote} 
-        onEdit={handleEdit} 
-      />
     </div>
   );
 };

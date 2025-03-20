@@ -1,26 +1,46 @@
 import Note from './Note';
+import { FiFileText } from 'react-icons/fi';
+import { useNotes } from '../context/NotesContext';
+import { useRef, useEffect } from 'react';
 
-const NotesList = ({ notes, onDelete, onEdit }) => {
+const NotesList = ({ isAdding, setIsAdding }) => {
+  const { notes } = useNotes();
+  const notesContainerRef = useRef(null);
+
+  useEffect(() => {
+    if (isAdding && notesContainerRef.current && notes.length > 0) {
+      const firstNoteElement = notesContainerRef.current.firstChild;
+      if (firstNoteElement) {
+        firstNoteElement.scrollIntoView({ behavior: 'smooth' });
+        firstNoteElement.focus();
+        setIsAdding(false);
+      }
+    }
+  }, [isAdding, notes.length, setIsAdding]);
+
   if (notes.length === 0) {
     return (
-      <div className="bg-gray-50 border border-gray-200 rounded-md p-8 text-center">
-        <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-        </svg>
-        <p className="mt-4 text-lg text-gray-600">No notes found. Create one!</p>
+      <div className="bg-white border border-gray-200 rounded-xl p-10 text-center shadow-md">
+        <div className="flex justify-center">
+          <div className="rounded-full bg-blue-100 p-3 text-blue-500">
+            <FiFileText className="h-10 w-10" />
+          </div>
+        </div>
+        <h3 className="mt-4 text-xl font-medium text-gray-900">No notes found</h3>
+        <p className="mt-2 text-gray-600">Get started by creating your first note!</p>
       </div>
     );
   }
 
   return (
-    <div className="grid gap-4 md:grid-cols-2">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[80vh] overflow-y-auto pr-2" ref={notesContainerRef}>
       {notes.map(note => (
-        <Note 
-          key={note.id} 
-          note={note} 
-          onDelete={onDelete} 
-          onEdit={onEdit} 
-        />
+        <div key={note.id} className="h-full">
+          <Note 
+            note={note} 
+            isNewlyCreated={isAdding && note.id === notes[0].id} 
+          />
+        </div>
       ))}
     </div>
   );
