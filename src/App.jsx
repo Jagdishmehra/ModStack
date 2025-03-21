@@ -14,7 +14,7 @@ function App() {
       domain={"https://dev-pouq2mfoxifc4e1g.us.auth0.com"}
       clientId={"smp2hmkhHihH1mkzgQjqzpwlsXdEQ3fM"}
       authorizationParams={{
-        redirect_uri: "https://symphonious-pegasus-dafca0.netlify.app/"
+        redirect_uri: "https://mod-stack.vercel.app/"
       }}
       cacheLocation="localstorage"
     >
