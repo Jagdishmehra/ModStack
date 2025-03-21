@@ -11,10 +11,10 @@ import Navbar from './components/Navbar'
 function App() {
   return (
     <Auth0Provider
-      domain={import.meta.env.VITE_AUTH0_DOMAIN}
-      clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
+      domain={"https://dev-pouq2mfoxifc4e1g.us.auth0.com"}
+      clientId={"smp2hmkhHihH1mkzgQjqzpwlsXdEQ3fM"}
       authorizationParams={{
-        redirect_uri: import.meta.env.VITE_AUTH0_REDIRECT_URI
+        redirect_uri: "https://symphonious-pegasus-dafca0.netlify.app/"
       }}
       cacheLocation="localstorage"
     >
